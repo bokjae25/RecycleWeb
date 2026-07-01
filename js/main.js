@@ -15,7 +15,7 @@
   let lastResult = null;
 
   const $ = (id) => document.getElementById(id);
-  const screens = ["menuScreen", "gameScreen", "resultScreen", "historyScreen"];
+  const screens = ["authScreen", "menuScreen", "gameScreen", "resultScreen", "historyScreen"];
 
   function showScreen(id) {
     screens.forEach((s) => $(s).classList.toggle("active", s === id));
@@ -134,7 +134,13 @@
   }
   const pad = (n) => String(n).padStart(2, "0");
 
-  /* ---------- 로그인 상태 표시 ---------- */
+  /* ---------- 로그인 / 인증 ---------- */
+  Auth.bindShowScreen(showScreen);
+  Auth.init({
+    onChange: () => { refreshAuthUI(); showScreen("menuScreen"); },
+    onSkip: () => showScreen("menuScreen"),
+  });
+
   async function refreshAuthUI() {
     const label = $("userLabel");
     const btn = $("authBtn");
@@ -149,18 +155,26 @@
       btn.textContent = "로그아웃";
       btn.onclick = async () => { await Backend.signOut(); refreshAuthUI(); };
       Store.syncPending().then((r) => {
-        if (r.synced) console.log(`[Sync] 밀린 기록 ${r.synced}건 업로드 완료`);
+        if (r.synced) {
+          console.log(`[Sync] 밀린 기록 ${r.synced}건 업로드 완료`);
+        }
       });
     } else {
       label.textContent = "로그인 안 됨";
       btn.textContent = "로그인";
-      btn.onclick = () => {
-        // TODO(5단계): 로그인 화면 구현. 현재는 안내만.
-        alert("로그인 화면은 다음 단계(Supabase 연동)에서 추가됩니다.");
-      };
+      btn.onclick = () => Auth.open("login");
     }
   }
 
   refreshAuthUI();
-  showScreen("menuScreen");
+
+  // 첫 방문 시 로그인 화면 유도 (서버 연결됐고 아직 로그인 안 했을 때)
+  (async function initialScreen() {
+    if (window.Backend && Backend.online) {
+      const user = await Backend.getUser();
+      showScreen(user ? "menuScreen" : "authScreen");
+    } else {
+      showScreen("menuScreen");
+    }
+  })();
 })();

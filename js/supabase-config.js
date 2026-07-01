@@ -11,6 +11,6 @@
    ============================================================ */
 
 window.SUPABASE_CONFIG = {
-  url: "",      // 예: "https://xxxxxxxx.supabase.co"
-  anonKey: "",  // 예: "eyJhbGciOiJIUzI1Ni...."
+  url: "https://ezoxiclklfzqjteprvdw.supabase.co",
+  anonKey: "sb_publishable_FgT8PjDnd9pJm3p4C0OGzg_dqYLDnai",
 };
