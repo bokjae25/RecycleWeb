@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>의료진 대시보드 | RecycleWeb</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1 class="logo">🩺 의료진 대시보드</h1>
+    <div class="user-area">
+      <span id="userLabel" class="user-label"></span>
+      <a href="index.html" class="btn btn-small btn-secondary">게임으로</a>
+      <button id="logoutBtn" class="btn btn-small" style="display:none;">로그아웃</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- 로그인 -->
+    <section id="loginScreen" class="screen active">
+      <h2 class="screen-title">의료진 로그인</h2>
+      <div class="auth-card">
+        <label class="field">
+          <span>이메일</span>
+          <input type="email" id="email" autocomplete="email" placeholder="clinician@hospital.com" />
+        </label>
+        <label class="field">
+          <span>비밀번호</span>
+          <input type="password" id="password" autocomplete="current-password" />
+        </label>
+        <p id="loginError" class="auth-error"></p>
+        <button id="loginBtn" class="btn auth-submit">로그인</button>
+        <p class="hint">환자 계정으로는 대시보드를 볼 수 없습니다. 의료진 계정으로 로그인하세요.</p>
+      </div>
+    </section>
+
+    <!-- 대시보드 본문 -->
+    <section id="dashScreen" class="screen">
+      <div class="connect-code">
+        <span>환자 연결 코드:</span>
+        <code id="clinicianCode">—</code>
+        <button id="copyCodeBtn" class="btn btn-small">복사</button>
+        <p class="hint">환자에게 이 코드를 알려주면, 환자가 게임 앱에서 입력해 담당 환자로 연결됩니다.</p>
+      </div>
+
+      <div class="dash-layout">
+        <aside class="patient-panel">
+          <h3>담당 환자 <span id="patientCount" class="count">0</span></h3>
+          <ul id="patientList" class="patient-list"></ul>
+        </aside>
+
+        <div class="detail-panel">
+          <div id="detailEmpty" class="detail-empty">← 왼쪽에서 환자를 선택하세요.</div>
+          <div id="detailContent" style="display:none;">
+            <h3 id="detailName"></h3>
+            <div class="summary-cards" id="summaryCards"></div>
+
+            <div class="chart-block">
+              <h4>날짜별 점수 추이</h4>
+              <div id="scoreChart" class="chart"></div>
+            </div>
+            <div class="chart-block">
+              <h4>정확도(%) 추이</h4>
+              <div id="accuracyChart" class="chart"></div>
+            </div>
+
+            <h4>최근 기록</h4>
+            <div id="sessionTable" class="session-table"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

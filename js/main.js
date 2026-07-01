@@ -106,6 +106,21 @@
   $("historyBtn").addEventListener("click", showHistory);
   $("historyBackBtn").addEventListener("click", () => showScreen("menuScreen"));
 
+  /* ---------- 담당 의료진 연결 ---------- */
+  $("linkBtn").addEventListener("click", async () => {
+    const code = prompt("의료진에게 받은 연결 코드를 입력하세요:");
+    if (!code) return;
+    try {
+      const user = await Backend.getUser();
+      const { error } = await Backend.client
+        .from("profiles").update({ clinician_id: code.trim() }).eq("id", user.id);
+      if (error) throw error;
+      alert("담당 의료진과 연결되었습니다. 앞으로의 기록이 의료진에게 공유됩니다.");
+    } catch (e) {
+      alert("연결 실패: 코드를 확인해주세요.\n" + (e.message || ""));
+    }
+  });
+
   function showHistory() {
     const sessions = Store.getLocalSessions();
     const list = $("historyList");
@@ -154,6 +169,7 @@
       label.textContent = user.email || "로그인됨";
       btn.textContent = "로그아웃";
       btn.onclick = async () => { await Backend.signOut(); refreshAuthUI(); };
+      $("linkBtn").style.display = "";
       Store.syncPending().then((r) => {
         if (r.synced) {
           console.log(`[Sync] 밀린 기록 ${r.synced}건 업로드 완료`);
@@ -163,6 +179,7 @@
       label.textContent = "로그인 안 됨";
       btn.textContent = "로그인";
       btn.onclick = () => Auth.open("login");
+      $("linkBtn").style.display = "none";
     }
   }
 

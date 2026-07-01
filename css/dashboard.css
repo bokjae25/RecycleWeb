@@ -1,0 +1,55 @@
+/* ===== 의료진 대시보드 전용 스타일 ===== */
+
+.hint { font-size: 0.9rem; color: var(--text-muted); margin-top: 10px; }
+
+.connect-code {
+  background: #fff3e0; border: 2px solid #ffcc80; border-radius: var(--radius);
+  padding: 16px 20px; margin-bottom: 24px;
+}
+.connect-code span { font-weight: 700; margin-right: 8px; }
+.connect-code code {
+  font-size: 1.1rem; background: #fff; padding: 4px 12px; border-radius: 8px;
+  border: 1px solid var(--border); user-select: all;
+}
+.connect-code .hint { margin-top: 8px; }
+
+.dash-layout { display: grid; grid-template-columns: 280px 1fr; gap: 24px; }
+
+.patient-panel { background: var(--surface); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
+.patient-panel h3 { margin-top: 0; }
+.count { background: var(--primary); color: #fff; border-radius: 10px; padding: 1px 10px; font-size: 0.9rem; }
+.patient-list { list-style: none; margin: 0; padding: 0; }
+.patient-list li {
+  padding: 12px 14px; border-radius: 10px; cursor: pointer;
+  margin-bottom: 6px; border: 2px solid transparent;
+}
+.patient-list li:hover { background: #f0f7ff; }
+.patient-list li.active { background: #e3f2fd; border-color: var(--primary); }
+.patient-list .p-name { font-weight: 700; }
+.patient-list .p-meta { font-size: 0.85rem; color: var(--text-muted); }
+.patient-empty { color: var(--text-muted); padding: 16px; }
+
+.detail-panel { background: var(--surface); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); min-height: 400px; }
+.detail-empty { color: var(--text-muted); text-align: center; padding: 80px 20px; font-size: 1.1rem; }
+
+.summary-cards { display: flex; flex-wrap: wrap; gap: 14px; margin: 16px 0 26px; }
+.summary-card {
+  flex: 1; min-width: 120px; background: #f0f7ff; border-radius: 12px;
+  padding: 14px 16px; text-align: center;
+}
+.summary-card .s-val { font-size: 1.7rem; font-weight: 800; color: var(--primary); }
+.summary-card .s-label { font-size: 0.9rem; color: var(--text-muted); }
+
+.chart-block { margin-bottom: 26px; }
+.chart-block h4 { margin: 0 0 8px; }
+.chart { width: 100%; }
+.chart svg { width: 100%; height: auto; display: block; }
+
+.session-table { overflow-x: auto; }
+.session-table table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+.session-table th, .session-table td { padding: 8px 10px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.session-table th { color: var(--text-muted); font-weight: 700; }
+
+@media (max-width: 800px) {
+  .dash-layout { grid-template-columns: 1fr; }
+}
