@@ -1,0 +1,155 @@
+/* ===== 재활 게임 공통 스타일 =====
+   노인/환자 친화: 큰 글씨, 큰 버튼, 높은 대비 */
+
+:root {
+  --bg: #f0f7ff;
+  --surface: #ffffff;
+  --primary: #1565c0;
+  --primary-dark: #0d47a1;
+  --accent: #ff7043;
+  --text: #1a2733;
+  --text-muted: #55606b;
+  --border: #cfd8dc;
+  --success: #2e7d32;
+  --shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+  --radius: 16px;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Segoe UI", "Malgun Gothic", sans-serif;
+  font-size: 20px;
+  line-height: 1.5;
+}
+
+/* 상단 바 */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  background: var(--primary);
+  color: #fff;
+  box-shadow: var(--shadow);
+}
+.logo { margin: 0; font-size: 1.6rem; }
+.user-area { display: flex; align-items: center; gap: 12px; }
+.user-label { font-size: 1rem; opacity: 0.9; }
+
+.container { max-width: 960px; margin: 0 auto; padding: 24px; }
+
+/* 화면 전환 */
+.screen { display: none; }
+.screen.active { display: block; }
+.screen-title { font-size: 1.6rem; text-align: center; margin: 12px 0 28px; }
+
+/* 버튼 */
+.btn {
+  font-size: 1.2rem;
+  padding: 14px 28px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--primary);
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.08s, background 0.2s;
+  min-height: 56px;
+}
+.btn:hover { background: var(--primary-dark); }
+.btn:active { transform: scale(0.97); }
+.btn-secondary { background: #607d8b; }
+.btn-secondary:hover { background: #455a64; }
+.btn-small { font-size: 1rem; padding: 8px 16px; min-height: 40px; }
+
+/* 난이도 */
+.difficulty-bar {
+  display: flex; align-items: center; justify-content: center;
+  gap: 16px; margin-bottom: 28px; flex-wrap: wrap;
+}
+.difficulty-label { font-weight: 700; color: var(--text-muted); }
+.difficulty-buttons { display: flex; gap: 10px; }
+.diff-btn { background: #fff; color: var(--primary); border: 2px solid var(--primary); }
+.diff-btn.active { background: var(--primary); color: #fff; }
+.diff-btn:hover { background: var(--primary-dark); color: #fff; }
+
+/* 게임 카드 그리드 */
+.game-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+.game-card {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  background: var(--surface);
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 16px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: transform 0.12s, border-color 0.2s;
+  font-family: inherit;
+}
+.game-card:hover:not(.disabled) { transform: translateY(-4px); border-color: var(--primary); }
+.game-card.disabled { opacity: 0.5; cursor: not-allowed; }
+.game-icon { font-size: 3rem; }
+.game-name { font-size: 1.3rem; font-weight: 700; }
+.game-desc { font-size: 0.95rem; color: var(--text-muted); }
+
+.menu-footer { text-align: center; margin-top: 32px; }
+
+/* 게임 HUD & 캔버스 */
+.game-hud {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.hud-stats { display: flex; gap: 24px; font-size: 1.2rem; }
+.hud-item strong { color: var(--primary); font-size: 1.4rem; }
+#gameCanvas {
+  display: block; width: 100%; height: auto;
+  background: #e3f2fd;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  touch-action: none;
+}
+
+/* 결과 화면 */
+.result-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow);
+  max-width: 480px;
+  margin: 0 auto 24px;
+}
+.result-row {
+  display: flex; justify-content: space-between;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+  font-size: 1.2rem;
+}
+.result-row:last-child { border-bottom: none; }
+.result-row strong { color: var(--primary); }
+.result-actions { display: flex; gap: 16px; justify-content: center; }
+.sync-status { text-align: center; color: var(--text-muted); margin-top: 16px; }
+
+/* 기록 화면 */
+.history-list { max-width: 640px; margin: 0 auto 24px; }
+.history-item {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--surface); border-radius: 12px;
+  padding: 14px 18px; margin-bottom: 10px; box-shadow: var(--shadow);
+}
+.history-item .h-game { font-weight: 700; }
+.history-item .h-meta { color: var(--text-muted); font-size: 0.95rem; }
+.history-empty { text-align: center; color: var(--text-muted); padding: 40px; }
+#historyScreen { text-align: center; }
+
+@media (max-width: 600px) {
+  body { font-size: 18px; }
+  .logo { font-size: 1.3rem; }
+  .hud-stats { gap: 14px; }
+}

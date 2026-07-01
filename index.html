@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>재활 게임 | RecycleWeb</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1 class="logo">🕹️ 재활 게임</h1>
+    <div class="user-area" id="userArea">
+      <span id="userLabel" class="user-label">오프라인 모드</span>
+      <button id="authBtn" class="btn btn-small">로그인</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- 게임 선택 메뉴 -->
+    <section id="menuScreen" class="screen active">
+      <h2 class="screen-title">오늘의 재활 운동을 골라주세요</h2>
+
+      <div class="difficulty-bar">
+        <span class="difficulty-label">난이도</span>
+        <div class="difficulty-buttons" id="difficultyButtons">
+          <button class="btn diff-btn" data-diff="easy">쉬움</button>
+          <button class="btn diff-btn active" data-diff="normal">보통</button>
+          <button class="btn diff-btn" data-diff="hard">어려움</button>
+        </div>
+      </div>
+
+      <div class="game-grid">
+        <button class="game-card" data-game="balloon">
+          <span class="game-icon">🎈</span>
+          <span class="game-name">풍선 터뜨리기</span>
+          <span class="game-desc">손-눈 협응 · 반응 속도</span>
+        </button>
+        <button class="game-card disabled" data-game="trace" disabled>
+          <span class="game-icon">✏️</span>
+          <span class="game-name">궤적 따라 그리기</span>
+          <span class="game-desc">준비 중</span>
+        </button>
+        <button class="game-card disabled" data-game="memory" disabled>
+          <span class="game-icon">🧠</span>
+          <span class="game-name">순서 기억</span>
+          <span class="game-desc">준비 중</span>
+        </button>
+        <button class="game-card disabled" data-game="recycle" disabled>
+          <span class="game-icon">♻️</span>
+          <span class="game-name">분리수거</span>
+          <span class="game-desc">준비 중</span>
+        </button>
+      </div>
+
+      <div class="menu-footer">
+        <button id="historyBtn" class="btn btn-secondary">내 기록 보기</button>
+      </div>
+    </section>
+
+    <!-- 게임 진행 화면 -->
+    <section id="gameScreen" class="screen">
+      <div class="game-hud">
+        <button id="quitBtn" class="btn btn-small btn-secondary">← 그만두기</button>
+        <div class="hud-stats">
+          <span class="hud-item">점수 <strong id="hudScore">0</strong></span>
+          <span class="hud-item">남은 시간 <strong id="hudTime">0</strong>초</span>
+        </div>
+      </div>
+      <canvas id="gameCanvas"></canvas>
+    </section>
+
+    <!-- 결과 화면 -->
+    <section id="resultScreen" class="screen">
+      <h2 class="screen-title">🎉 수고하셨어요!</h2>
+      <div class="result-card" id="resultCard"></div>
+      <div class="result-actions">
+        <button id="retryBtn" class="btn">다시 하기</button>
+        <button id="menuBtn" class="btn btn-secondary">메뉴로</button>
+      </div>
+      <p id="syncStatus" class="sync-status"></p>
+    </section>
+
+    <!-- 기록 화면 -->
+    <section id="historyScreen" class="screen">
+      <h2 class="screen-title">내 기록</h2>
+      <div id="historyList" class="history-list"></div>
+      <button id="historyBackBtn" class="btn btn-secondary">← 메뉴로</button>
+    </section>
+  </main>
+
+  <!-- Supabase JS (CDN) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/games/balloon.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
