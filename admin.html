@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>관리자 | RecycleWeb</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/dashboard.css" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+  <header class="topbar">
+    <h1 class="logo">⚙️ 관리자</h1>
+    <div class="user-area">
+      <span id="userLabel" class="user-label"></span>
+      <a href="dashboard.html" class="btn btn-small btn-secondary">대시보드</a>
+      <a href="index.html" class="btn btn-small btn-secondary">게임</a>
+      <button id="logoutBtn" class="btn btn-small" style="display:none;">로그아웃</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- 로그인 -->
+    <section id="loginScreen" class="screen active">
+      <h2 class="screen-title">관리자 로그인</h2>
+      <div class="auth-card">
+        <label class="field"><span>이메일</span>
+          <input type="email" id="email" autocomplete="email" /></label>
+        <label class="field"><span>비밀번호</span>
+          <input type="password" id="password" autocomplete="current-password" /></label>
+        <p id="loginError" class="auth-error"></p>
+        <button id="loginBtn" class="btn auth-submit">로그인</button>
+        <p class="hint">관리자 권한이 있는 계정만 접근할 수 있습니다.</p>
+      </div>
+    </section>
+
+    <!-- 관리 본문 -->
+    <section id="adminScreen" class="screen">
+      <div class="stat-row" id="statRow"></div>
+
+      <div class="admin-toolbar">
+        <input type="text" id="searchBox" placeholder="이름 또는 이메일 검색…" />
+        <select id="roleFilter">
+          <option value="all">전체 역할</option>
+          <option value="patient">환자</option>
+          <option value="clinician">의료진</option>
+          <option value="admin">관리자</option>
+        </select>
+        <button id="reloadBtn" class="btn btn-small btn-secondary">새로고침</button>
+      </div>
+
+      <div class="admin-table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>이름</th><th>이메일</th><th>역할</th><th>담당 의료진</th>
+              <th>플레이</th><th>등록일</th><th>저장</th>
+            </tr>
+          </thead>
+          <tbody id="userRows"></tbody>
+        </table>
+      </div>
+      <p id="adminMsg" class="admin-msg"></p>
+      <p class="hint">※ 계정 완전 삭제(로그인 자체 제거)는 보안상 프론트에서 불가하며, Supabase 대시보드의 Authentication에서 처리합니다.</p>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

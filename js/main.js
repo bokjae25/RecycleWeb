@@ -166,20 +166,31 @@
     }
     const user = await Backend.getUser();
     if (user) {
-      label.textContent = user.email || "로그인됨";
       btn.textContent = "로그아웃";
       btn.onclick = async () => { await Backend.signOut(); refreshAuthUI(); };
-      $("linkBtn").style.display = "";
       Store.syncPending().then((r) => {
         if (r.synced) {
           console.log(`[Sync] 밀린 기록 ${r.synced}건 업로드 완료`);
         }
       });
+
+      // 역할에 따라 메뉴/링크 표시
+      const profile = await Backend.getProfile();
+      const role = profile ? profile.role : "patient";
+      const name = (profile && profile.full_name) || user.email;
+      label.textContent = name + (role === "clinician" ? " (의료진)" : role === "admin" ? " (관리자)" : "");
+
+      const isPatient = role === "patient";
+      $("linkBtn").style.display = isPatient ? "" : "none";       // 담당 의료진 연결(환자만)
+      $("dashboardLink").style.display = (role === "clinician" || role === "admin") ? "" : "none";
+      $("adminLink").style.display = (role === "admin") ? "" : "none";
     } else {
       label.textContent = "로그인 안 됨";
       btn.textContent = "로그인";
       btn.onclick = () => Auth.open("login");
       $("linkBtn").style.display = "none";
+      $("dashboardLink").style.display = "none";
+      $("adminLink").style.display = "none";
     }
   }
 

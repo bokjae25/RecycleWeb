@@ -1,0 +1,27 @@
+/* ===== 관리자 페이지 전용 ===== */
+
+.stat-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 22px; }
+.stat-box {
+  flex: 1; min-width: 140px; background: var(--surface);
+  border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); text-align: center;
+}
+.stat-box .v { font-size: 2rem; font-weight: 800; color: var(--primary); }
+.stat-box .l { color: var(--text-muted); font-size: 0.95rem; }
+
+.admin-toolbar { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.admin-toolbar input, .admin-toolbar select {
+  font-size: 1rem; padding: 10px 12px; border: 2px solid var(--border);
+  border-radius: 10px; font-family: inherit; background: #fff;
+}
+.admin-toolbar input { flex: 1; min-width: 200px; }
+
+.admin-table-wrap { overflow-x: auto; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); }
+.admin-table { width: 100%; border-collapse: collapse; font-size: 0.98rem; }
+.admin-table th, .admin-table td { padding: 12px 14px; text-align: left; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.admin-table th { color: var(--text-muted); background: #f7fafc; position: sticky; top: 0; }
+.admin-table tr.dirty { background: #fffde7; }
+.admin-table select { font-size: 0.95rem; padding: 6px 8px; border: 1px solid var(--border); border-radius: 8px; font-family: inherit; }
+.admin-table .save-btn { font-size: 0.9rem; padding: 6px 14px; min-height: 0; }
+.admin-table .save-btn:disabled { opacity: 0.4; cursor: default; }
+
+.admin-msg { text-align: center; color: var(--success); min-height: 1.4em; margin-top: 14px; font-weight: 700; }

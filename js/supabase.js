@@ -26,6 +26,16 @@ window.Backend = (function () {
     return data ? data.user : null;
   }
 
+  /* 로그인한 사용자의 프로필(역할 등) 조회 */
+  async function getProfile() {
+    if (!online) return null;
+    const user = await getUser();
+    if (!user) return null;
+    const { data, error } = await client
+      .from("profiles").select("*").eq("id", user.id).single();
+    return error ? null : data;
+  }
+
   async function signIn(email, password) {
     if (!online) throw new Error("서버 미연결");
     return client.auth.signInWithPassword({ email, password });
@@ -61,6 +71,6 @@ window.Backend = (function () {
   return {
     get online() { return online; },
     get client() { return client; },
-    getUser, signIn, signUp, signOut, saveSession,
+    getUser, getProfile, signIn, signUp, signOut, saveSession,
   };
 })();
