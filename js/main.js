@@ -111,6 +111,9 @@
   $("menuBtn").addEventListener("click", () => showScreen("menuScreen"));
   $("quitBtn").addEventListener("click", () => {
     if (currentGame && GAMES[currentGame]) GAMES[currentGame].stop();
+    currentGame = null;
+    const canvas = $("gameCanvas");
+    canvas.getContext("2d").clearRect(0, 0, canvas.width, canvas.height);
     showScreen("menuScreen");
   });
 

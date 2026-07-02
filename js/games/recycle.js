@@ -23,7 +23,7 @@ window.RecycleGame = (function () {
   let dragging = null;
   let score = 0, hits = 0, drops = 0;
   let reactionTimes = [];
-  let timeLeft = 0, running = false, lastTs = 0, spawnTimer = 0;
+  let timeLeft = 0, running = false, lastTs = 0, spawnTimer = 0, rafId = null;
   let onTick, onEnd;
 
   function start(canvasEl, difficulty, callbacks) {
@@ -48,7 +48,7 @@ window.RecycleGame = (function () {
     running = true;
     lastTs = performance.now();
     onTick({ score, timeLeft: Math.ceil(timeLeft) });
-    requestAnimationFrame(loop);
+    rafId = requestAnimationFrame(loop);
   }
 
   function resize() {
@@ -142,7 +142,7 @@ window.RecycleGame = (function () {
     onTick({ score, timeLeft: Math.max(0, Math.ceil(timeLeft)) });
 
     if (timeLeft <= 0) return finish();
-    requestAnimationFrame(loop);
+    rafId = requestAnimationFrame(loop);
   }
 
   function draw() {
@@ -202,6 +202,7 @@ window.RecycleGame = (function () {
   function stop() { running = false; cleanup(); }
 
   function cleanup() {
+    if (rafId != null) { cancelAnimationFrame(rafId); rafId = null; }
     window.removeEventListener("resize", resize);
     if (canvas) {
       canvas.removeEventListener("pointerdown", onDown);
@@ -209,6 +210,7 @@ window.RecycleGame = (function () {
       canvas.removeEventListener("pointerup", onUp);
       canvas.removeEventListener("pointercancel", onUp);
     }
+    if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
 
   return { start, stop };

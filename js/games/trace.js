@@ -13,7 +13,7 @@ window.TraceGame = (function () {
   };
 
   let canvas, ctx, cfg;
-  let timeLeft = 0, running = false, lastTs = 0;
+  let timeLeft = 0, running = false, lastTs = 0, rafId = null;
   let pathT = 0;           // 0~1 경로 진행도(왕복)
   let pathDir = 1;
   let pointer = null;      // 현재 포인터 위치 {x,y}
@@ -35,7 +35,7 @@ window.TraceGame = (function () {
     window.addEventListener("resize", resize);
     canvas.addEventListener("pointermove", onMove);
     canvas.addEventListener("pointerdown", onMove);
-    canvas.addEventListener("pointerleave", () => (pointer = null));
+    canvas.addEventListener("pointerleave", onLeave);
 
     timeLeft = cfg.duration;
     pathT = 0; pathDir = 1;
@@ -45,7 +45,7 @@ window.TraceGame = (function () {
     running = true;
     lastTs = performance.now();
     onTick({ score, timeLeft: Math.ceil(timeLeft) });
-    requestAnimationFrame(loop);
+    rafId = requestAnimationFrame(loop);
   }
 
   function resize() {
@@ -53,6 +53,8 @@ window.TraceGame = (function () {
     canvas.width = w;
     canvas.height = Math.round(w * 0.55);
   }
+
+  function onLeave() { pointer = null; }
 
   /* 경로: 화면을 가로지르는 물결 곡선. t(0~1) -> 좌표 */
   function pathPoint(t) {
@@ -108,7 +110,7 @@ window.TraceGame = (function () {
     onTick({ score, timeLeft: Math.max(0, Math.ceil(timeLeft)) });
 
     if (timeLeft <= 0) return finish();
-    requestAnimationFrame(loop);
+    rafId = requestAnimationFrame(loop);
   }
 
   function draw(target) {
@@ -163,11 +165,14 @@ window.TraceGame = (function () {
   function stop() { running = false; cleanup(); }
 
   function cleanup() {
+    if (rafId != null) { cancelAnimationFrame(rafId); rafId = null; }
     window.removeEventListener("resize", resize);
     if (canvas) {
       canvas.removeEventListener("pointermove", onMove);
       canvas.removeEventListener("pointerdown", onMove);
+      canvas.removeEventListener("pointerleave", onLeave);
     }
+    if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
 
   return { start, stop };

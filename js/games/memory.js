@@ -22,7 +22,7 @@ window.MemoryGame = (function () {
   let acceptingInput = false;
   let litIndex = -1;
   let promptReadyAt = 0;
-  let timeLeft = 0, running = false, lastTs = 0;
+  let timeLeft = 0, running = false, lastTs = 0, rafId = null;
   let score = 0, hits = 0, clicks = 0;
   let reactionTimes = [];
   let runToken = 0;
@@ -46,7 +46,7 @@ window.MemoryGame = (function () {
     runToken++;
     playRound(cfg.startLen, runToken);
     onTick({ score, timeLeft: Math.ceil(timeLeft) });
-    requestAnimationFrame(loop);
+    rafId = requestAnimationFrame(loop);
   }
 
   function resize() {
@@ -135,7 +135,7 @@ window.MemoryGame = (function () {
     onTick({ score, timeLeft: Math.max(0, Math.ceil(timeLeft)) });
 
     if (timeLeft <= 0) return finish();
-    requestAnimationFrame(loop);
+    rafId = requestAnimationFrame(loop);
   }
 
   function draw() {
@@ -171,8 +171,10 @@ window.MemoryGame = (function () {
   function stop() { running = false; runToken++; cleanup(); }
 
   function cleanup() {
+    if (rafId != null) { cancelAnimationFrame(rafId); rafId = null; }
     window.removeEventListener("resize", resize);
     if (canvas) canvas.removeEventListener("pointerdown", onPointer);
+    if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
 
   return { start, stop };
