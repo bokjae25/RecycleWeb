@@ -9,6 +9,18 @@
     memory: "순서 기억",
     recycle: "분리수거",
   };
+  const GAMES = {
+    balloon: window.BalloonGame,
+    trace: window.TraceGame,
+    memory: window.MemoryGame,
+    recycle: window.RecycleGame,
+  };
+  const SUCCESS_LABEL = {
+    balloon: "맞힌 풍선",
+    trace: "궤적 복귀 성공",
+    memory: "정답 터치",
+    recycle: "올바르게 분류",
+  };
 
   let difficulty = "normal";
   let currentGame = null;
@@ -42,15 +54,15 @@
     $("hudScore").textContent = "0";
     $("hudTime").textContent = "0";
 
-    if (game === "balloon") {
-      BalloonGame.start($("gameCanvas"), difficulty, {
-        onTick: ({ score, timeLeft }) => {
-          $("hudScore").textContent = score;
-          $("hudTime").textContent = timeLeft;
-        },
-        onEnd: handleGameEnd,
-      });
-    }
+    const impl = GAMES[game];
+    if (!impl) return;
+    impl.start($("gameCanvas"), difficulty, {
+      onTick: ({ score, timeLeft }) => {
+        $("hudScore").textContent = score;
+        $("hudTime").textContent = timeLeft;
+      },
+      onEnd: handleGameEnd,
+    });
   }
 
   async function handleGameEnd(stats) {
@@ -86,7 +98,7 @@
       <div class="result-row"><span>점수</span><strong>${stats.score}점</strong></div>
       <div class="result-row"><span>정확도</span><strong>${stats.accuracy}%</strong></div>
       <div class="result-row"><span>평균 반응 속도</span><strong>${stats.avgReactionMs} ms</strong></div>
-      <div class="result-row"><span>맞힌 풍선</span><strong>${stats.hits} / ${stats.clicks}회 클릭</strong></div>
+      <div class="result-row"><span>${SUCCESS_LABEL[session.game] || "성공"}</span><strong>${stats.hits} / ${stats.clicks}회 시도</strong></div>
     `;
   }
 
@@ -98,7 +110,7 @@
   $("retryBtn").addEventListener("click", () => launchGame(currentGame));
   $("menuBtn").addEventListener("click", () => showScreen("menuScreen"));
   $("quitBtn").addEventListener("click", () => {
-    if (currentGame === "balloon") BalloonGame.stop();
+    if (currentGame && GAMES[currentGame]) GAMES[currentGame].stop();
     showScreen("menuScreen");
   });
 

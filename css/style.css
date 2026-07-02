@@ -32,16 +32,16 @@ html, body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 24px;
+  padding: 14px clamp(20px, 4vw, 48px);
   background: var(--primary);
   color: #fff;
   box-shadow: var(--shadow);
 }
 .logo { margin: 0; font-size: 1.6rem; }
-.user-area { display: flex; align-items: center; gap: 12px; }
+.user-area { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: flex-end; }
 .user-label { font-size: 1rem; opacity: 0.9; }
 
-.container { max-width: 960px; margin: 0 auto; padding: 24px; }
+.container { max-width: 1280px; margin: 0 auto; padding: clamp(20px, 4vw, 48px); }
 
 /* 화면 전환 */
 .screen { display: none; }
@@ -80,15 +80,15 @@ html, body {
 /* 게임 카드 그리드 */
 .game-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 24px;
 }
 .game-card {
-  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
   background: var(--surface);
   border: 2px solid var(--border);
   border-radius: var(--radius);
-  padding: 28px 16px;
+  padding: 36px 20px;
   cursor: pointer;
   box-shadow: var(--shadow);
   transition: transform 0.12s, border-color 0.2s;
@@ -96,11 +96,14 @@ html, body {
 }
 .game-card:hover:not(.disabled) { transform: translateY(-4px); border-color: var(--primary); }
 .game-card.disabled { opacity: 0.5; cursor: not-allowed; }
-.game-icon { font-size: 3rem; }
-.game-name { font-size: 1.3rem; font-weight: 700; }
+.game-icon { font-size: 3.4rem; }
+.game-name { font-size: 1.35rem; font-weight: 700; }
 .game-desc { font-size: 0.95rem; color: var(--text-muted); }
 
-.menu-footer { text-align: center; margin-top: 32px; }
+.menu-footer { text-align: center; margin-top: 36px; display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+/* 넓은 화면: 메뉴를 화면 안에서 여유있게 배치 */
+#menuScreen { max-width: 1100px; margin: 0 auto; }
 
 /* 게임 HUD & 캔버스 */
 .game-hud {
