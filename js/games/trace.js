@@ -21,7 +21,8 @@ window.TraceGame = (function () {
   let offSince = 0;        // 이탈 시작 시각
   let onGoodTime = 0, totalTime = 0;
   let recoveries = [];     // 이탈→복귀까지 걸린 시간(ms)
-  let score = 0;
+  let recoveryAttempts = 0;
+  let score = 0, exactScore = 0;
   let onTick, onEnd;
 
   function start(canvasEl, difficulty, callbacks) {
@@ -34,14 +35,16 @@ window.TraceGame = (function () {
     resize();
     window.addEventListener("resize", resize);
     canvas.addEventListener("pointermove", onMove);
-    canvas.addEventListener("pointerdown", onMove);
+    canvas.addEventListener("pointerdown", onDown);
     canvas.addEventListener("pointerleave", onLeave);
+    canvas.addEventListener("pointerup", onUp);
+    canvas.addEventListener("pointercancel", onUp);
 
     timeLeft = cfg.duration;
     pathT = 0; pathDir = 1;
     pointer = null; onTrack = false; offSince = 0;
-    onGoodTime = 0; totalTime = 0; recoveries = [];
-    score = 0;
+    onGoodTime = 0; totalTime = 0; recoveries = []; recoveryAttempts = 0;
+    score = 0; exactScore = 0;
     running = true;
     lastTs = performance.now();
     onTick({ score, timeLeft: Math.ceil(timeLeft) });
@@ -54,7 +57,27 @@ window.TraceGame = (function () {
     canvas.height = Math.round(w * 0.55);
   }
 
-  function onLeave() { pointer = null; }
+  function markOffTrack() {
+    if (onTrack) {
+      offSince = performance.now();
+      recoveryAttempts++;
+    }
+    onTrack = false;
+  }
+
+  function onLeave() {
+    markOffTrack();
+    pointer = null;
+  }
+
+  function onDown(e) {
+    onMove(e);
+    if (e.pointerType !== "mouse") canvas.setPointerCapture(e.pointerId);
+  }
+
+  function onUp(e) {
+    if (e.pointerType !== "mouse") onLeave();
+  }
 
   /* 경로: 화면을 가로지르는 물결 곡선. t(0~1) -> 좌표 */
   function pathPoint(t) {
@@ -92,18 +115,19 @@ window.TraceGame = (function () {
 
       if (nowOnTrack) {
         onGoodTime += dt;
-        score += Math.round(dt * 20);
+        // 프레임마다 반올림하면 대부분 0점이 되므로 소수점으로 누적한다.
+        exactScore += dt * 20;
+        score = Math.floor(exactScore);
         if (!onTrack && offSince) {
           recoveries.push(performance.now() - offSince);
           offSince = 0;
         }
         onTrack = true;
       } else {
-        if (onTrack) offSince = performance.now();
-        onTrack = false;
+        markOffTrack();
       }
     } else {
-      onTrack = false;
+      markOffTrack();
     }
 
     draw(target);
@@ -155,7 +179,7 @@ window.TraceGame = (function () {
     onEnd({
       score,
       hits: recoveries.length,
-      clicks: recoveries.length,
+      clicks: recoveryAttempts,
       accuracy,
       avgReactionMs: avgReaction,
       durationSec: cfg.duration,
@@ -169,8 +193,10 @@ window.TraceGame = (function () {
     window.removeEventListener("resize", resize);
     if (canvas) {
       canvas.removeEventListener("pointermove", onMove);
-      canvas.removeEventListener("pointerdown", onMove);
+      canvas.removeEventListener("pointerdown", onDown);
       canvas.removeEventListener("pointerleave", onLeave);
+      canvas.removeEventListener("pointerup", onUp);
+      canvas.removeEventListener("pointercancel", onUp);
     }
     if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
   }
