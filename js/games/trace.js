@@ -7,9 +7,10 @@
 
 window.TraceGame = (function () {
   const DIFFS = {
-    easy:   { tolerance: 46, speed: 0.55, duration: 45 },
-    normal: { tolerance: 32, speed: 0.8,  duration: 40 },
-    hard:   { tolerance: 20, speed: 1.15, duration: 35 },
+    // 재활 훈련에서는 급한 움직임보다 안정적인 추적이 우선이다.
+    easy:   { tolerance: 58, speed: 0.22, duration: 50 },
+    normal: { tolerance: 42, speed: 0.34, duration: 45 },
+    hard:   { tolerance: 28, speed: 0.50, duration: 40 },
   };
 
   let canvas, ctx, cfg;
