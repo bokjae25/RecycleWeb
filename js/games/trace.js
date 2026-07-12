@@ -24,6 +24,8 @@ window.TraceGame = (function () {
   let recoveries = [];     // 이탈→복귀까지 걸린 시간(ms)
   let recoveryAttempts = 0;
   let score = 0, exactScore = 0;
+  let lastScoreMilestone = 0;
+  let scoreFlash = null;
   let onTick, onEnd;
 
   function start(canvasEl, difficulty, callbacks) {
@@ -45,7 +47,7 @@ window.TraceGame = (function () {
     pathT = 0; pathDir = 1;
     pointer = null; onTrack = false; offSince = 0;
     onGoodTime = 0; totalTime = 0; recoveries = []; recoveryAttempts = 0;
-    score = 0; exactScore = 0;
+    score = 0; exactScore = 0; lastScoreMilestone = 0; scoreFlash = null;
     running = true;
     lastTs = performance.now();
     onTick({ score, timeLeft: Math.ceil(timeLeft) });
@@ -119,6 +121,12 @@ window.TraceGame = (function () {
         // 프레임마다 반올림하면 대부분 0점이 되므로 소수점으로 누적한다.
         exactScore += dt * 20;
         score = Math.floor(exactScore);
+        // 점수 획득을 캔버스 안에서도 바로 알 수 있게 표시한다.
+        if (score >= lastScoreMilestone + 10) {
+          const earned = Math.floor((score - lastScoreMilestone) / 10) * 10;
+          lastScoreMilestone += earned;
+          scoreFlash = { value: earned, x: target.x, y: target.y - 28, startedAt: performance.now() };
+        }
         if (!onTrack && offSince) {
           recoveries.push(performance.now() - offSince);
           offSince = 0;
@@ -168,6 +176,28 @@ window.TraceGame = (function () {
       ctx.fillStyle = "#ff7043";
       ctx.fill();
     }
+
+    // 상단 HUD 외에도 게임 안에서 즉시 점수 획득 여부를 보여준다.
+    if (onTrack) {
+      ctx.fillStyle = "rgba(46, 125, 50, 0.92)";
+      ctx.font = "bold 18px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("✓ 잘 따라가고 있어요", canvas.width / 2, 34);
+    }
+    if (scoreFlash) {
+      const age = performance.now() - scoreFlash.startedAt;
+      if (age > 800) {
+        scoreFlash = null;
+      } else {
+        ctx.globalAlpha = 1 - age / 800;
+        ctx.fillStyle = "#2e7d32";
+        ctx.font = "bold 26px sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(`+${scoreFlash.value}점`, scoreFlash.x, scoreFlash.y - age * 0.04);
+        ctx.globalAlpha = 1;
+      }
+    }
+    ctx.textAlign = "start";
   }
 
   function finish() {
