@@ -21,6 +21,7 @@ window.MemoryGame = (function () {
   let inputIndex = 0;
   let acceptingInput = false;
   let litIndex = -1;
+  let wrongFeedback = false;
   let promptReadyAt = 0;
   let timeLeft = 0, running = false, lastTs = 0, rafId = null;
   let score = 0, hits = 0, clicks = 0;
@@ -40,6 +41,7 @@ window.MemoryGame = (function () {
     canvas.addEventListener("pointerdown", onPointer);
 
     score = 0; hits = 0; clicks = 0; reactionTimes = [];
+    wrongFeedback = false;
     timeLeft = cfg.duration;
     running = true;
     lastTs = performance.now();
@@ -80,6 +82,7 @@ window.MemoryGame = (function () {
     inputIndex = 0;
     acceptingInput = false;
     litIndex = -1;
+    wrongFeedback = false;
 
     if (!(await sleep(400, token))) return;
     for (let i = 0; i < sequence.length; i++) {
@@ -120,6 +123,7 @@ window.MemoryGame = (function () {
       }
     } else {
       acceptingInput = false;
+      wrongFeedback = true;
       const token = runToken;
       setTimeout(() => { if (token === runToken && running) playRound(sequence.length, token); }, 650);
     }
@@ -141,10 +145,19 @@ window.MemoryGame = (function () {
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     tiles.forEach((t, i) => {
-      ctx.fillStyle = i === litIndex ? "#fff59d" : t.color;
+      ctx.fillStyle = wrongFeedback && i === litIndex ? "#d32f2f" : i === litIndex ? "#fff59d" : t.color;
       roundRect(t.x, t.y, t.w, t.h, 14);
       ctx.fill();
     });
+    if (wrongFeedback) {
+      ctx.fillStyle = "rgba(198, 40, 40, 0.94)";
+      ctx.font = "bold 28px sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("다시 도전해요!", canvas.width / 2, 42);
+      ctx.font = "18px sans-serif";
+      ctx.fillText("같은 단계부터 다시 시작합니다", canvas.width / 2, 68);
+      ctx.textAlign = "start";
+    }
   }
 
   function roundRect(x, y, w, h, r) {
