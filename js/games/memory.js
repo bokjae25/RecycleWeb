@@ -76,6 +76,14 @@ window.MemoryGame = (function () {
     return new Promise((resolve) => setTimeout(() => resolve(token === runToken && running), ms));
   }
 
+  function flashWholeScreen() {
+    document.body.classList.remove("game-error-flash");
+    // 같은 오류가 연속으로 나와도 CSS 애니메이션을 매번 처음부터 재생한다.
+    void document.body.offsetWidth;
+    document.body.classList.add("game-error-flash");
+    setTimeout(() => document.body.classList.remove("game-error-flash"), 520);
+  }
+
   /* 시퀀스를 보여준 뒤 입력을 받도록 전환 (같은 token 동안만 유효) */
   async function playRound(len, token) {
     sequence = Array.from({ length: len }, () => Math.floor(Math.random() * tiles.length));
@@ -124,6 +132,7 @@ window.MemoryGame = (function () {
     } else {
       acceptingInput = false;
       wrongFeedback = true;
+      flashWholeScreen();
       const token = runToken;
       setTimeout(() => { if (token === runToken && running) playRound(sequence.length, token); }, 650);
     }
@@ -150,12 +159,14 @@ window.MemoryGame = (function () {
       ctx.fill();
     });
     if (wrongFeedback) {
+      ctx.fillStyle = "rgba(255, 255, 255, 0.88)";
+      ctx.fillRect(0, 0, canvas.width, 118);
       ctx.fillStyle = "rgba(198, 40, 40, 0.94)";
-      ctx.font = "bold 28px sans-serif";
+      ctx.font = "bold 42px sans-serif";
       ctx.textAlign = "center";
-      ctx.fillText("다시 도전해요!", canvas.width / 2, 42);
-      ctx.font = "18px sans-serif";
-      ctx.fillText("같은 단계부터 다시 시작합니다", canvas.width / 2, 68);
+      ctx.fillText("다시 도전해요!", canvas.width / 2, 54);
+      ctx.font = "bold 23px sans-serif";
+      ctx.fillText("같은 단계부터 다시 시작합니다", canvas.width / 2, 88);
       ctx.textAlign = "start";
     }
   }

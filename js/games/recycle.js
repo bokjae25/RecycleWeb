@@ -7,9 +7,9 @@
 
 window.RecycleGame = (function () {
   const DIFFS = {
-    easy:   { bins: 2, spawnMs: 1900, itemR: 46, maxItems: 3, duration: 45 },
-    normal: { bins: 3, spawnMs: 1500, itemR: 38, maxItems: 4, duration: 40 },
-    hard:   { bins: 4, spawnMs: 1150, itemR: 32, maxItems: 5, duration: 38 },
+    easy:   { bins: 2, spawnMs: 1900, itemR: 58, maxItems: 3, duration: 45 },
+    normal: { bins: 3, spawnMs: 1500, itemR: 48, maxItems: 4, duration: 40 },
+    hard:   { bins: 4, spawnMs: 1150, itemR: 40, maxItems: 5, duration: 38 },
   };
   const CATEGORIES = [
     { key: "paper",   label: "종이",    icon: "📄", color: "#8d6e63" },

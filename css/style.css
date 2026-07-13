@@ -120,6 +120,23 @@ html, body {
   touch-action: none;
 }
 
+/* 순서 기억 게임에서 오답을 즉시 알 수 있도록 화면 전체를 짧게 점멸한다. */
+body.game-error-flash::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background: #ef5350;
+  animation: game-error-flash 0.52s ease-out;
+}
+@keyframes game-error-flash {
+  0%, 100% { opacity: 0; }
+  20% { opacity: 0.45; }
+  45% { opacity: 0.12; }
+  65% { opacity: 0.35; }
+}
+
 /* 결과 화면 */
 .result-card {
   background: var(--surface);
